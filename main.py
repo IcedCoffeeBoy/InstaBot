@@ -2,13 +2,13 @@ import os
 import random
 import time
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-load_dotenv(verbose=True)
-USERNAME = os.getenv("INSTA_USERNAME")
-PASSWORD = os.getenv("INSTA_PASSWORD")
+# load_dotenv(verbose=True)
+USERNAME = ""
+PASSWORD = ""
 
 
 class Instagram:
