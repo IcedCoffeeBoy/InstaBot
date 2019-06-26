@@ -1,4 +1,5 @@
 import os
+import random
 import time
 
 from dotenv import load_dotenv
@@ -37,8 +38,32 @@ class Instagram:
             return
         self.driver.get("https://www.instagram.com/" + user)
 
+    def get_user_posts(self):
+        links = set()
+        for i in range(0,7):
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
+            links_holders = self.driver.find_elements_by_css_selector("a")
+            newLinks = [link_holder.get_attribute("href") for link_holder in links_holders ]
+            newLinks = [link for link in newLinks if '.com/p/' in link]
+            links.update(newLinks)
+
+        for pic_href in links:
+            self.driver.get(pic_href)
+            time.sleep(2)
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            try:
+                time.sleep(random.randint(2, 4))
+                like_button = lambda: self.driver.find_element_by_xpath('//span[@aria-label="Like"]').click()
+                like_button().click()
+                time.sleep(1)
+            except Exception as e:
+                time.sleep(2)
+
+
 
 if __name__ == "__main__":
     instagram = Instagram(USERNAME, PASSWORD)
     instagram.signin()
     instagram.go_to_user("melvinoyx")
+    instagram.get_user_posts()
