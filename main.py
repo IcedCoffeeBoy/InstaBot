@@ -1,10 +1,13 @@
+import os
 import time
 
+from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-USERNAME = ""
-PASSWORD = ""
+load_dotenv(verbose=True)
+USERNAME = os.getenv("INSTA_USERNAME")
+PASSWORD = os.getenv("INSTA_PASSWORD")
 
 
 class Instagram:
