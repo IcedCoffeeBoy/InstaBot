@@ -10,7 +10,7 @@ USERNAME = os.getenv("INSTA_USERNAME")
 PASSWORD = os.getenv("INSTA_PASSWORD")
 
 if __name__ == "__main__":
-    instagram = Instagram(USERNAME, PASSWORD, headless=True)
+    instagram = Instagram(USERNAME, PASSWORD)
     try:
         instagram.signin()
         instagram.like_tag_posts("gg")
