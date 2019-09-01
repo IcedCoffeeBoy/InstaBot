@@ -3,12 +3,19 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 from CSVwriter import CSVwriter
 
 
 class Instagram:
-    def __init__(self, username, password):
-        self.driver = webdriver.Chrome("./chromedriver.exe")
+    def __init__(self, username, password, headless=False):
+        if headless:
+            options = Options()
+            options.add_argument('--headless')
+            self.driver = webdriver.Chrome("./chromedriver.exe", chrome_options=options)
+        else:
+            self.driver = webdriver.Chrome("./chromedriver.exe")
+
         self.username = username
         self.password = password
 
@@ -18,7 +25,6 @@ class Instagram:
         time.sleep(2)
 
         inputs = self.driver.find_elements_by_css_selector('form input')
-        print(inputs)
 
         emailInput = inputs[0]
         passwordInput = inputs[1]
@@ -32,6 +38,8 @@ class Instagram:
         self.is_signin = self.checkUrl(current_url)
         if not self.is_signin:
             print("user not signed in")
+        else:
+            print("Log in success!")
 
     def go_tag_posts(self, tag):
         if not self.is_signin:
@@ -60,6 +68,7 @@ class Instagram:
                 time.sleep(random.randint(2, 4))
                 like_button = lambda: self.driver.find_element_by_xpath('//span[@aria-label="Like"]').click()
                 like_button().click()
+                print("liked " + pic_href)
                 time.sleep(1)
                 likes += 1
             except Exception as e:
@@ -69,15 +78,11 @@ class Instagram:
         print("Total number of likes: %i" % likes)
         return
 
-
-
     def go_to_user(self, user):
         if not self.is_signin:
             print("User not signed in")
             return
         self.driver.get("https://www.instagram.com/" + user)
-
-
 
     def like_user_posts(self, user):
         self.go_to_user(user)
@@ -100,7 +105,8 @@ class Instagram:
                 time.sleep(random.randint(2, 4))
                 like_button = lambda: self.driver.find_element_by_xpath('//span[@aria-label="Like"]').click()
                 like_button().click()
-                time.sleep(1)
+                print("Liked")
+                time.sleep(1 + pic_href)
                 likes += 1
             except Exception as e:
                 print(e)
@@ -133,6 +139,9 @@ class Instagram:
         texts = [span.text for span in spans]
         print(texts)
         csvwriter.many_insert(texts)
+
+    def close_driver(self):
+        self.driver.close()
 
     def checkUrl(self, string):
         items = string.split('.com')
